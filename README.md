@@ -29,8 +29,7 @@ https://developer.apple.com/reference/storekit/skcloudservicecontroller/1620618-
 
 Authorisation guide with examples - https://developer.apple.com/library/content/qa/qa1929/_index.html
 
-* Playback music controller - future reference only *
-https://developer.apple.com/reference/mediaplayer/mpmusicplayercontroller
+Playback music controller - future reference only - https://developer.apple.com/reference/mediaplayer/mpmusicplayercontroller
 
 # Settings
 
