@@ -28,28 +28,8 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @IBAction func createPlaylist() {
-         let stuff = getPlaylist()
-        
-         NSLog("playlist retreived: \(stuff.persistentID)")
-        
-        //self.constructPlaylist()
-        
-       ///let query = MPMediaQuery.playlists()
-        //let items = query.collections
-        
-        /*
-        NSLog(" - ")
-        for item in items! {
-            NSLog("persistentID: \(item.persistentID)")
-            NSLog("MPMediaPlaylistPropertyName: \(item.value(forProperty: MPMediaItemPropertyPersistentID))")
-            NSLog("MPMediaPlaylistPropertyName: \(item.value(forProperty: MPMediaPlaylistPropertyName))")
-            NSLog("MPMediaPlaylistPropertyName: \(item.value(forProperty: MPMediaPlaylistPropertyPlaylistAttributes))")
-            NSLog(" - ")
-        }
-        NSLog(" - ")
- */
+        self.constructPlaylist()
     }
     
     @IBAction func addTrack() {
@@ -61,24 +41,22 @@ class ViewController: UIViewController {
                     print("error writing track \(error)")
                     return
                 } else {
-                    //  print("Added track to playlist")
+                    NSLOG("Added track to playlist")
                 }
             }
         }
-        print("playlist writing done \(playlist?.persistentID)")
+        NSLOG("playlist writing done \(playlist?.persistentID)")
         
         self.exportSuccess(count: self.iTunesTracks.count)
         */
     }
     
     @IBAction func openPlaylist() {
-        
+
         //let iTunesPath = "https://itunes.apple.com/gb/playlist/my-bbc-music-playlist/idpl.f96eb1bdb34f4e779ee97f1a87b651c3"
        // let iTunesPath = "https://itunes.apple.com/gb/playlist/my-bbc-music-playlist/idpl.6939409701285735539"
        // let settingsUrl = NSURL(string: iTunesPath)
        // UIApplication.shared.open(settingsUrl as! URL)
-        
-        clearPrefs()
     }
     
     func isDeviceCapable() -> Bool {
@@ -95,8 +73,8 @@ class ViewController: UIViewController {
             } /*else if (capabilities & SKCloudServiceCapabilityMusicCatalogPlayback) {
                 // http://stackoverflow.com/questions/37613889/apple-music-detect-is-member
                 // https://developer.xamarin.com/api/type/StoreKit.SKCloudServiceAuthorizationStatus/
+                // concerned with playback
             } */ else if capabilities.rawValue == 2 {
-                
                 //if 2 = register with apple music - restricted
                 //if 1 = sharing disabled - shazam
                 self.promptAppleMusicSubscriptionNeeded()
@@ -114,7 +92,6 @@ class ViewController: UIViewController {
         let localstore = UserDefaults.standard
         localstore.removeObject(forKey: "playlist")
         localstore.synchronize()
-        //NSLog(" ")
         NSLog("playlist removed")
     }
     
@@ -179,36 +156,26 @@ class ViewController: UIViewController {
         
         if (playlistId != nil) {
         
-            
-            
             let predicate = MPMediaPropertyPredicate(value: playlistId, forProperty: MPMediaItemPropertyPersistentID)
             let query = MPMediaQuery()
             query.addFilterPredicate(predicate)
         
-            NSLog("pre if \(playlistId)")
-            
             if let items = query.collections, let item = items.first {
                 
-               
-                 NSLog("Help here \(playlistId) and \(item.persistentID)")
-               // playlist = items
-                
+                playlist = items
+                NSLog("Playlist IDs: \(playlistId) and \(item.persistentID)")
                 NSLog("Playlist found in settings: \(item.value(forProperty: MPMediaPlaylistPropertyName))")
-                //returnPlaylist = item
-                
-                
-              //  NSLog("rep value: \(playlist.items)")
-              //  NSLog("rep value: \(playlist.representativeItem)")
-               // returnPlaylist = playlist.representativeItem!
+                NSLog("rep value: \(playlist.items)")
+                NSLog("rep value: \(playlist.representativeItem)")
+                returnPlaylist = playlist.representativeItem!
                 
             } else {
                 NSLog("no playlist found through predicate")
-
             }
         } else {
             NSLog("no playlist in local storage")
-           // self.constructPlaylist()
-           // return self.getPlaylist()
+            self.constructPlaylist()
+            return self.getPlaylist()
         }
         return playlist!
     }
@@ -247,14 +214,12 @@ class ViewController: UIViewController {
         }
     }
     
-    
     /* user prompts */
     
     func exportSuccess(count: Int){
         let alertController = UIAlertController(title: "Export Complete", message: "\(count) tracks added to your Apple Music Library", preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
         present(alertController, animated: true, completion: nil)
-        
     }
     
     func promptAuthSuccess() {
