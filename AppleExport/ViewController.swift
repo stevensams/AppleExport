@@ -87,7 +87,20 @@ class ViewController: UIViewController {
     }
     
     func isUKStorefront() -> Bool {
-        return true
+
+        /* ensure iTunes search parameter 's=143444' is included for GB streamable track */
+
+        let controller = SKCloudServiceController()
+        controller.requestStorefrontIdentifier(completionHandler: (storefrontId:String?, err:NSError?) -> Void) {
+            (storefrontId: String) in
+            print("Success! The Storefront ID fetched was: \(storefrontId)")
+            completion("complete")
+        }
+        ("commands") {
+            (result: String) in
+            print("Store code: \(result)")
+            return result == 143444
+        }
     }
     
     func requestMediaLibraryAccess() -> Bool {
