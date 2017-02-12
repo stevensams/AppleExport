@@ -49,13 +49,13 @@ class Export: NSObject {
         
         let localstore = UserDefaults.standard
         let library = MPMediaLibrary.default()
-        let metadata = MPMediaPlaylistCreationMetadata(name: "My BBC Music Playlist")
+        let metadata = MPMediaPlaylistCreationMetadata(name: "My Random Playlist")
         let date = Date()
         let format = DateFormatter()
         format.dateFormat = "dd/MM/yyyy HH:MM"
         let dateString = format.string(from: date)
-        metadata.descriptionText = "Exported on \(dateString)"
-        metadata.authorDisplayName = "BBC Music"
+        metadata.descriptionText = "Created on \(dateString)"
+        metadata.authorDisplayName = "Random Author"
         
         library.getPlaylist(with: UUID(), creationMetadata: metadata) { playlist, error in
             if error != nil {
